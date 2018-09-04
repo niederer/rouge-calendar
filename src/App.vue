@@ -1,36 +1,71 @@
 <template>
   <div id="app">
     <h1>My Calendar</h1>
-    <calendar-view
-      :show-date="showDate"
-      class="">
-      <calendar-view-header
-        slot="header"
-        slot-scope="t"
-        :header-props="t.headerProps"
-        @input="setShowDate" />
+    <div class="new-date-box">
+      <h2>Add a Lipstick</h2>
+      <div class="field">
+        <label for="newRecordName">Lipstick name</label>
+        <input v-model="newRecordName" name="newRecordName" id="newRecordName" type="text">
+      </div>
+      <div class="field">
+        <label for="newRecordDate">Date</label>
+        <input v-model="newRecordDate" name="newRecordDate" id="newRecordDate" type="date">
+      </div>
+      <button @click="createNewRecord">Add Lipstick</button>
+    </div>
+    <calendar-view :show-date="showDate" :events="events" @click-event="onClickEvent" class="">
+      <calendar-view-header slot="header" slot-scope="t" :header-props="t.headerProps" @input="setShowDate" />
     </calendar-view>
+
   </div>
 </template>
 
 <script>
-  import { CalendarView, CalendarViewHeader } from "vue-simple-calendar"
+  import { CalendarView, CalendarViewHeader, CalendarMathMixin } from 'vue-simple-calendar';
 
   export default {
     name: 'app',
     data: function() {
-      return { showDate: new Date() }
+      return {
+        showDate: new Date(),
+        newRecordName: '',
+        newRecordDate: '',
+        events: []
+      };
     },
-    components: {
-      CalendarView,
-      CalendarViewHeader,
-    },
+
+    events: [],
+
     methods: {
       setShowDate(d) {
         this.showDate = d;
       },
+
+      createNewRecord() {
+        this.events.push({
+          startDate: this.newRecordDate,
+          title: this.newRecordName
+        });
+    mixins: [CalendarMathMixin],
+    components: {
+      CalendarView,
+      CalendarViewHeader,
+    },
+
+    mounted: function() {
+      if (localStorage.getItem('events')) this.events = JSON.parse(localStorage.getItem('events'));
+      this.newRecordDate = this.isoYearMonthDay(this.today());
+    },
+
+    watch: {
+      events: {
+        handler() {
+          localStorage.setItem('events', JSON.stringify(this.events));
+        },
+        deep: true,
+      }
     }
-  }
+  };
 </script>
 
 <style lang="scss">
