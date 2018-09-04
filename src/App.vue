@@ -22,6 +22,7 @@
 
 <script>
   import { CalendarView, CalendarViewHeader, CalendarMathMixin } from 'vue-simple-calendar';
+  import ModalView from './components/ModalView.vue';
 
   export default {
     name: 'app',
@@ -46,10 +47,31 @@
           startDate: this.newRecordDate,
           title: this.newRecordName
         });
+      },
+
+      onClickEvent(event) {
+        // this.doSomethingElse(event);
+        // console.log('You clicked' + event.title);
+
+        this.$modal.show(ModalView, {
+          title: event.title,
+          body: event.startDate
+        },
+        {
+          draggable: true
+        });
+      },
+
+      doSomethingElse(event) {
+        console.log(' Bubbled Event ' + event.title);
+      }
+    },
+
     mixins: [CalendarMathMixin],
     components: {
       CalendarView,
       CalendarViewHeader,
+      ModalView
     },
 
     mounted: function() {
