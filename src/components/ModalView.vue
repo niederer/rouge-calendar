@@ -10,7 +10,7 @@ export default {
   name: 'ModalView',
   props: {
     title: String,
-    body: String
+    body: Date
   },
 };
 </script>
