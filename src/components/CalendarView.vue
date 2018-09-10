@@ -83,8 +83,20 @@
         handler() {
           localStorage.setItem('events', JSON.stringify(this.events));
         },
+
         deep: true,
       }
     }
   };
 </script>
+
+<style lang="scss">
+  .cv-wrapper .cv-event {
+    font-size: 0.9em;
+  }
+  .today {
+    .cv-day-number {
+      font-weight: bold;
+    }
+  }
+</style>
