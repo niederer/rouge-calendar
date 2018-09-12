@@ -5,11 +5,11 @@
       <h2>Add a Lipstick</h2>
       <div class="field">
         <label for="newRecordName">Lipstick name</label>
-        <input v-model="newRecordName" name="newRecordName" id="newRecordName" type="text">
+        <input v-model="model.title" name="newRecordName" id="newRecordName" type="text">
       </div>
       <div class="field">
         <label for="newRecordDate">Date</label>
-        <input v-model="newRecordDate" name="newRecordDate" id="newRecordDate" type="date">
+        <input v-model="model.startDate" name="newRecordDate" id="newRecordDate" type="date">
       </div>
       <button @click="createNewRecord">Add Lipstick</button>
     </div>
@@ -29,10 +29,13 @@
     data: function() {
       return {
         showDate: new Date(),
-        newRecordName: '',
-        newRecordDate: '',
-        events: []
+        events: [],
+        model: {}
       };
+    },
+
+    async created() {
+      this.refreshEvents();
     },
 
     events: [],
@@ -42,11 +45,14 @@
         this.showDate = d;
       },
 
-      createNewRecord() {
-        this.events.push({
-          startDate: this.newRecordDate,
-          title: this.newRecordName
-        });
+      async createNewRecord() {
+        await api.createEvent(this.model);
+        await this.refreshEvents();
+
+        // this.events.push({
+        //   startDate: this.newRecordDate,
+        //   title: this.newRecordName
+        // });
       },
 
       onClickEvent(event) {
@@ -64,6 +70,10 @@
 
       doSomethingElse(event) {
         console.log(' Bubbled Event ' + event.title);
+      },
+
+      async refreshEvents() {
+        this.events = await api.getEvents();
       }
     },
 
@@ -74,10 +84,10 @@
       ModalView
     },
 
-    mounted: function() {
-      if (localStorage.getItem('events')) this.events = JSON.parse(localStorage.getItem('events'));
-      this.newRecordDate = this.isoYearMonthDay(this.today());
-    },
+    // mounted: function() {
+    //   if (localStorage.getItem('events')) this.events = JSON.parse(localStorage.getItem('events'));
+    //   this.newRecordDate = this.isoYearMonthDay(this.today());
+    // },
 
     watch: {
       events: {
