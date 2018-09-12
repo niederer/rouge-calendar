@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <a href="#" @click.prevent="login" v-if="!activeUser">Log in</a>
-    <a href="#" @click.prevent="logout" v-else>Log out</a>
+    <a href="#" v-cloak @click.prevent="login" v-if="!activeUser">Log in</a>
+    <a href="#" v-cloak @click.prevent="logout" v-else>Log out</a>
     <router-view />
   </div>
 </template>
@@ -37,8 +37,8 @@ export default {
       await this.$auth.logout();
       await this.refreshActiveUser();
       this.$router.push('/');
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -50,5 +50,8 @@ export default {
     width: 90vw;
     margin-left: auto;
     margin-right: auto;
+  }
+  [v-cloak] {
+    display: none;
   }
 </style>
