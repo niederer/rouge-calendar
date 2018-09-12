@@ -22,6 +22,7 @@
 <script>
   import { CalendarView, CalendarViewHeader, CalendarMathMixin } from 'vue-simple-calendar';
   import ModalView from '@/components/ModalView.vue';
+  import api from '@/api';
 
   export default {
     name: 'app',
